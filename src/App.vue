@@ -1,37 +1,40 @@
 <template>
-  <div class="sql-workspace">
-    <div class="sql-region">
-      <div class="sql-item-edit">
-        <div class="workspace-left"></div>
-        <div class="workspace-right">
-          <SqlEditor ref="sqlEditorRef" :code="code"/>
-        </div>
-      </div>
-      <div class="buttons">
-        <button class="button-item" @click="onExplain">
+  <n-card class="sql-workspace">
+    <n-card class="sql-region">
+      <n-card class="sql-item-edit">
+        <n-card class="workspace-left"></n-card>
+        <n-card class="workspace-right">
+          <code-editor v-model="code"></code-editor>
+        </n-card>
+      </n-card>
+      <n-card class="buttons">
+        <n-button class="button-item" type="info" @click="onExplain">
           <span>Explain</span>
-        </button>
-        <button class="button-item" @click="onSelect">
+        </n-button>
+        <n-button class="button-item" type="success" @click="onSelect">
           <span>Select</span>
-        </button>
-      </div>
-    </div>
-  </div>
+        </n-button>
+      </n-card>
+    </n-card>
+  </n-card>
+  <n-divider />
+  <ResultTable></ResultTable>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import SqlEditor from './components/SqlEditor.vue';
+import CodeEditor from './components/sql-editor.vue'
+import { NButton } from 'naive-ui'
+import ResultTable from './components/result-table.vue'
 
 const code = ref('')
-const sqlEditorRef = ref();
 
 function onExplain() {
-  console.log('explain: ', sqlEditorRef.value.code)
+  console.log('explain: ', code.value)
 }
 
 function onSelect() {
-  console.log('select: ', sqlEditorRef.value)
+  console.log('select: ', code.value)
 }
 </script>
 
