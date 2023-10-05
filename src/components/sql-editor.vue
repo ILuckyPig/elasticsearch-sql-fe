@@ -1,5 +1,5 @@
 <template>
-  <n-card ref="editor" class="editor-area"></n-card>
+  <div ref="editor" class="editor-area"></div>
 </template>
 
 <script lang="ts">

@@ -1,74 +1,63 @@
 <template>
-    <n-card>
-        <n-data-table :columns="columns" :data="data" :pagination="pagination" :bordered="false" />
-    </n-card>
+    <n-data-table :columns="columns" :data="data" striped />
 </template>
-
+  
 <script lang="ts">
-import { h, defineComponent } from 'vue'
-import { NButton, useMessage } from 'naive-ui'
-import type { DataTableColumns } from 'naive-ui'
+import { defineComponent } from 'vue'
+import { NDataTable, type DataTableColumns } from 'naive-ui'
 
-type Song = {
-    no: number
-    title: string
-    length: string
+type RowData = {
+    key: number
+    name: string
+    age: number
+    address: string
 }
 
-const createColumns = ({
-    play
-}: {
-    play: (row: Song) => void
-}): DataTableColumns<Song> => {
+const createColumns = (): DataTableColumns<RowData> => {
     return [
         {
-            title: 'No',
-            key: 'no'
+            title: 'Name',
+            key: 'name'
         },
         {
-            title: 'Title',
-            key: 'title'
+            title: 'Age',
+            key: 'age'
         },
         {
-            title: 'Length',
-            key: 'length'
-        },
-        {
-            title: 'Action',
-            key: 'actions',
-            render(row) {
-                return h(
-                    NButton,
-                    {
-                        strong: true,
-                        tertiary: true,
-                        size: 'small',
-                        onClick: () => play(row)
-                    },
-                    { default: () => 'Play' }
-                )
-            }
+            title: 'Address',
+            key: 'address'
         }
     ]
 }
 
-const data: Song[] = [
-    { no: 3, title: 'Wonderwall', length: '4:18' },
-    { no: 4, title: "Don't Look Back in Anger", length: '4:48' },
-    { no: 12, title: 'Champagne Supernova', length: '7:27' }
+const createData = (): RowData[] => [
+    {
+        key: 0,
+        name: 'John Brown',
+        age: 32,
+        address: 'New York No. 1 Lake Park'
+    },
+    {
+        key: 1,
+        name: 'Jim Green',
+        age: 42,
+        address: 'London No. 1 Lake Park'
+    },
+    {
+        key: 2,
+        name: 'Joe Black',
+        age: 32,
+        address: 'Sidney No. 1 Lake Park'
+    }
 ]
 
 export default defineComponent({
+    name: 'result-table',
+    components: { NDataTable },
     setup() {
-        const message = useMessage()
         return {
-            data,
-            columns: createColumns({
-                play(row: Song) {
-                    message.info(`Play ${row.title}`)
-                }
-            }),
-            pagination: false as const
+            data: createData(),
+            columns: createColumns()
         }
     }
 })

@@ -1,30 +1,30 @@
 <template>
-  <n-card class="sql-workspace">
-    <n-card class="sql-region">
-      <n-card class="sql-item-edit">
-        <n-card class="workspace-left"></n-card>
-        <n-card class="workspace-right">
+  <div class="sql-workspace">
+    <div class="sql-region">
+      <div class="sql-item-edit">
+        <div class="workspace-left"></div>
+        <div class="workspace-right">
           <code-editor v-model="code"></code-editor>
-        </n-card>
-      </n-card>
-      <n-card class="buttons">
+        </div>
+      </div>
+      <div class="buttons">
         <n-button class="button-item" type="info" @click="onExplain">
           <span>Explain</span>
         </n-button>
         <n-button class="button-item" type="success" @click="onSelect">
           <span>Select</span>
         </n-button>
-      </n-card>
-    </n-card>
-  </n-card>
+      </div>
+    </div>
+  </div>
   <n-divider />
-  <ResultTable></ResultTable>
+  <result-table></result-table>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
+import { NButton, NDivider } from 'naive-ui'
 import CodeEditor from './components/sql-editor.vue'
-import { NButton } from 'naive-ui'
 import ResultTable from './components/result-table.vue'
 
 const code = ref('')
