@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="buttons">
-        <n-button class="button-item" type="info" @click="onExplain">
+        <n-button class="button-item" type="info" @click="onExplainClick">
           <span>Explain</span>
         </n-button>
         <n-button class="button-item" type="success" @click="onSelect">
@@ -18,19 +18,38 @@
     </div>
   </div>
   <n-divider />
-  <result-table></result-table>
+  <div>
+    <!-- <result-table ref="resultTable"></result-table> -->
+    <!-- <result-explain ref="resultExplain"></result-explain> -->
+    <n-code class="result-code" v-if="showExplainResult" :code="explainResultCode" language="json"></n-code>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { NButton, NDivider } from 'naive-ui'
 import CodeEditor from './components/sql-editor.vue'
-import ResultTable from './components/result-table.vue'
+// import ResultTable from './components/result-table.vue'
+import { NCode } from 'naive-ui'
+import { explain } from './services/api'
 
 const code = ref('')
+const showExplainResult = ref(false);
+// const resultTable = ref()
+const explainResultCode = ref('')
 
-function onExplain() {
-  console.log('explain: ', code.value)
+function onExplainClick() {
+  const sqlVO: SqlVO = { url: 'http://localhost:9200/', sql: code.value }
+  const response = explain('/explain', sqlVO)
+  response
+    .then(res => {
+      console.log(res)
+      explainResultCode.value = JSON.stringify(res.data.body, null, 2)
+    })
+    .catch(err => {
+      explainResultCode.value = err
+    })
+  showExplainResult.value = true
 }
 
 function onSelect() {
@@ -92,5 +111,9 @@ function onSelect() {
 .button-item {
   /* display: inline-block; */
   /*margin-left: 12px; */
+}
+
+.result-code {
+  height: 100px;
 }
 </style>
