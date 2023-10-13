@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const instance = axios.create({
-    baseURL: 'http://localhost:8888/editor',
+    baseURL: import.meta.env.VITE_APP_BASE_URL,
     timeout: 5000,
     headers: {
         'content-type': 'application/json; charset=utf-8'
