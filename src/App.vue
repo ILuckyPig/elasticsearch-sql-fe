@@ -4,7 +4,7 @@
       <div class="sql-item-edit">
         <div class="workspace-left"></div>
         <div class="workspace-right">
-          <code-editor v-model="code"></code-editor>
+          <code-editor :model-value="code"></code-editor>
         </div>
       </div>
       <div class="buttons">
@@ -17,23 +17,21 @@
       <el-table-column v-for="column in columns" :column-key="column.prop" :prop="column.prop" :label="column.label">
       </el-table-column>
     </el-table>
-    <div v-show="showStatus == ResultShowStatus.EXPLAIN">123123123124</div>
+    <code-view v-show="showStatus == ResultShowStatus.EXPLAIN" :json-code="explainResult"></code-view>
   </div>
-
-  <!-- <n-code class="result-code" v-if="showExplainResult" :code="explainResultCode" language="json"></n-code> -->
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { explain, query } from './services/api';
 import { ElDivider, ElButton, ElTable, ElTableColumn } from 'element-plus';
-import CodeEditor from './components/sql-editor.vue';
 import { ResultShowStatus } from './services/result-show-status';
+import CodeEditor from './components/sql-editor.vue';
+import CodeView from "./components/code-view.vue";
 
 const code = ref('');
 const showStatus = ref(ResultShowStatus.HIDE);
-// const resultTable = ref();
-const explainResultCode = ref('');
+const explainResult = ref('');
 const columns = ref();
 const data = ref();
 
@@ -43,10 +41,10 @@ function onExplain() {
   response
     .then(res => {
       console.log(res);
-      explainResultCode.value = JSON.stringify(res.data.body, null, 2);
+      explainResult.value = JSON.stringify(res.data.body, null, 2);
     })
     .catch(err => {
-      explainResultCode.value = err;
+      explainResult.value = err;
     })
   showStatus.value = ResultShowStatus.EXPLAIN;
 }
@@ -77,12 +75,12 @@ function loseFocus(event) {
 
 <style scoped>
 .sql-workspace {
-  background-color: #f9fafc;
-  border-left: 1px solid #dde2e8;
-  border-right: 1px solid #dde2e8;
+  /* background-color: #f9fafc; */
+  /* border-left: 1px solid #dde2e8; */
+  /* border-right: 1px solid #dde2e8; */
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .sql-region {
