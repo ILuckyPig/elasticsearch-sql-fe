@@ -1,5 +1,5 @@
 <template>
-    <highlightjs language="json" :code="jsonCode"></highlightjs>
+    <highlightjs class="code-view" language="json" :code="jsonCode"></highlightjs>
 </template>
   
 <script lang="ts">
@@ -20,3 +20,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+.code-view {
+    border: 1px solid #dde2e8;
+}
+</style>

@@ -13,7 +13,7 @@
       </div>
     </div>
     <el-divider />
-    <el-table v-show="showStatus == ResultShowStatus.SELECT" :data="data" stripe border>
+    <el-table v-show="showStatus == ResultShowStatus.SELECT" :header-cell-style="{background:'#eff2f9'}" :data="data" stripe border>
       <el-table-column v-for="column in columns" :column-key="column.prop" :prop="column.prop" :label="column.label">
       </el-table-column>
     </el-table>
@@ -80,11 +80,13 @@ function loseFocus(event) {
   /* border-right: 1px solid #dde2e8; */
   display: flex;
   flex-direction: column;
+  padding: 10px;
   /* height: 100vh; */
 }
 
 .sql-region {
-  margin: 10px;
+  padding: 10px;
+  border: 1px solid #dde2e8;
 }
 
 .sql-item-edit {
