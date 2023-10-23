@@ -13,10 +13,13 @@
       </div>
     </div>
     <el-divider />
-    <el-table v-show="showStatus == ResultShowStatus.SELECT" :header-cell-style="{background:'#eff2f9'}" :data="data" stripe border>
+    <div v-show="showStatus == ResultShowStatus.SELECT">
+      <result-table :all-table-data="data" :columns="columns"></result-table>
+    </div>
+    <!-- <el-table v-show="showStatus == ResultShowStatus.SELECT" :header-cell-style="{background:'#eff2f9'}" :data="data" stripe border>
       <el-table-column v-for="column in columns" :column-key="column.prop" :prop="column.prop" :label="column.label">
       </el-table-column>
-    </el-table>
+    </el-table> -->
     <code-view v-show="showStatus == ResultShowStatus.EXPLAIN" :json-code="explainResult"></code-view>
   </div>
 </template>
@@ -24,16 +27,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { explain, query } from './services/api';
-import { ElDivider, ElButton, ElTable, ElTableColumn } from 'element-plus';
+import { ElDivider, ElButton } from 'element-plus';
 import { ResultShowStatus } from './services/result-show-status';
 import CodeEditor from './components/sql-editor.vue';
 import CodeView from "./components/code-view.vue";
+import ResultTable from './components/result-table.vue';
 
 const code = ref('');
 const showStatus = ref(ResultShowStatus.HIDE);
 const explainResult = ref('');
-const columns = ref();
-const data = ref();
+const columns = ref(Array<string>(0));
+const data = ref(Array<Array<string>>(0));
 
 function onExplain() {
   const sqlVO: SqlVO = { url: 'http://localhost:9200/', sql: code.value };
