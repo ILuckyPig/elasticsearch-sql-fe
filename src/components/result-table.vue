@@ -1,7 +1,7 @@
 <template>
     <el-table :header-cell-style="{ background: '#eff2f9' }"
         :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)" stripe border>
-        <el-table-column v-for="column in columns" :column-key="column.prop" :prop="column.prop" :label="column.label">
+        <el-table-column v-for="column in columns" :prop="column.prop" :label="column.label">
         </el-table-column>
     </el-table>
     <el-pagination class="table-pagination" background layout="->, total, prev, pager, next, sizes" :page-size="pageSize" :current-page="currentPage"
@@ -26,7 +26,7 @@ export default defineComponent({
             required: true
         },
         columns: {
-            type: Array<string>,
+            type: Array<TableColumn>,
             required: true
         }
     },

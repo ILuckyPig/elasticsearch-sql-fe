@@ -18,6 +18,11 @@ interface DslVO {
 }
 
 interface TableVO {
-    columns: string[],
+    columns: TableColumn[],
     tableData: string[][]
+}
+
+interface TableColumn {
+    label: string,
+    prop: string
 }

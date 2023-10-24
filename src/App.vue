@@ -36,7 +36,7 @@ import ResultTable from './components/result-table.vue';
 const code = ref('');
 const showStatus = ref(ResultShowStatus.HIDE);
 const explainResult = ref('');
-const columns = ref(Array<string>(0));
+const columns = ref(Array<TableColumn>(0));
 const data = ref(Array<Array<string>>(0));
 
 function onExplain() {
@@ -68,12 +68,14 @@ function onSelect() {
   showStatus.value = ResultShowStatus.SELECT;
 }
 
-function loseFocus(event) {
+function loseFocus(event: Event) {
   let target = event.target;
-  if (target.nodeName == 'SPAN' || target.nodeName == 'I') {
-    target = event.target.parentNode;
+  if (target instanceof Element) {
+    if (target.nodeName == 'SPAN' || target.nodeName == 'I') {
+      target = target.parentNode;
+    }
+    (target as HTMLElement).blur();
   }
-  target.blur();
 }
 </script>
 
