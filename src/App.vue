@@ -4,73 +4,93 @@
       <div class="sql-item-edit">
         <div class="workspace-left"></div>
         <div class="workspace-right">
-          <code-editor v-model="code"></code-editor>
+          <code-editor :model-value="code"></code-editor>
         </div>
       </div>
       <div class="buttons">
-        <n-button class="button-item" type="info" @click="onExplainClick">
-          <span>Explain</span>
-        </n-button>
-        <n-button class="button-item" type="success" @click="onSelect">
-          <span>Select</span>
-        </n-button>
+        <el-button type="primary" @click="onExplain(); loseFocus($event)">Explain</el-button>
+        <el-button type="success" @click="onSelect(); loseFocus($event)">Select</el-button>
       </div>
     </div>
-  </div>
-  <n-divider />
-  <div>
-    <!-- <result-table ref="resultTable"></result-table> -->
-    <!-- <result-explain ref="resultExplain"></result-explain> -->
-    <n-code class="result-code" v-if="showExplainResult" :code="explainResultCode" language="json"></n-code>
+    <el-divider />
+    <div v-show="showStatus == ResultShowStatus.SELECT">
+      <result-table :table-data="data" :columns="columns"></result-table>
+    </div>
+    <!-- <el-table v-show="showStatus == ResultShowStatus.SELECT" :header-cell-style="{background:'#eff2f9'}" :data="data" stripe border>
+      <el-table-column v-for="column in columns" :column-key="column.prop" :prop="column.prop" :label="column.label">
+      </el-table-column>
+    </el-table> -->
+    <code-view v-show="showStatus == ResultShowStatus.EXPLAIN" :json-code="explainResult"></code-view>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { NButton, NDivider } from 'naive-ui'
-import CodeEditor from './components/sql-editor.vue'
-// import ResultTable from './components/result-table.vue'
-import { NCode } from 'naive-ui'
-import { explain } from './services/api'
+import { ref } from 'vue';
+import { explain, query } from './services/api';
+import { ElDivider, ElButton } from 'element-plus';
+import { ResultShowStatus } from './services/result-show-status';
+import CodeEditor from './components/sql-editor.vue';
+import CodeView from "./components/code-view.vue";
+import ResultTable from './components/result-table.vue';
 
-const code = ref('')
-const showExplainResult = ref(false);
-// const resultTable = ref()
-const explainResultCode = ref('')
+const code = ref('');
+const showStatus = ref(ResultShowStatus.HIDE);
+const explainResult = ref('');
+const columns = ref(Array<string>(0));
+const data = ref(Array<Array<string>>(0));
 
-function onExplainClick() {
-  const sqlVO: SqlVO = { url: 'http://localhost:9200/', sql: code.value }
-  const response = explain('/explain', sqlVO)
+function onExplain() {
+  const sqlVO: SqlVO = { url: 'http://localhost:9200/', sql: code.value };
+  const response = explain('/explain', sqlVO);
   response
     .then(res => {
-      console.log(res)
-      explainResultCode.value = JSON.stringify(res.data.body, null, 2)
+      console.log(res);
+      explainResult.value = JSON.stringify(res.data.body, null, 2);
     })
     .catch(err => {
-      explainResultCode.value = err
+      explainResult.value = err;
     })
-  showExplainResult.value = true
+  showStatus.value = ResultShowStatus.EXPLAIN;
 }
 
 function onSelect() {
-  console.log('select: ', code.value)
+  const sqlVO: SqlVO = { url: 'http://localhost:9200/', sql: code.value };
+  const response = query('/query', sqlVO);
+  response
+    .then(res => {
+      console.log(res);
+      columns.value = res.data.columns;
+      data.value = res.data.tableData;
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  showStatus.value = ResultShowStatus.SELECT;
+}
+
+function loseFocus(event) {
+  let target = event.target;
+  if (target.nodeName == 'SPAN' || target.nodeName == 'I') {
+    target = event.target.parentNode;
+  }
+  target.blur();
 }
 </script>
 
 <style scoped>
 .sql-workspace {
-  background-color: #f9fafc;
-  border-left: 1px solid #dde2e8;
-  border-right: 1px solid #dde2e8;
+  /* background-color: #f9fafc; */
+  /* border-left: 1px solid #dde2e8; */
+  /* border-right: 1px solid #dde2e8; */
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  /* overflow: hidden; */
-  /* padding: 0 20px; */
+  padding: 10px;
+  /* height: 100vh; */
 }
 
 .sql-region {
-  margin: 10px;
+  padding: 10px;
+  border: 1px solid #dde2e8;
 }
 
 .sql-item-edit {
@@ -78,15 +98,9 @@ function onSelect() {
   height: 62vh;
   font-size: 14px;
   font-family: Menlo-Regular, Monaco, Consolas, "Andale Mono", "Ubuntu Mono", monospace;
-  /* flex: 1;
-  height: calc(100% - 90px);
-  overflow: hidden;
-  padding: 0 20px; */
 }
 
 .workspace-left {
-  /* border-right: none; */
-  /* height: calc(100% - 2px); */
   min-width: 440px;
   width: 28%;
 }
@@ -94,7 +108,6 @@ function onSelect() {
 .workspace-right {
   border: 1px solid #dde2e8;
   flex: 1;
-  /* height: calc(100% - 2px); */
   width: 71.9%;
 }
 
@@ -102,18 +115,5 @@ function onSelect() {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
-  /* text-align: right; */
-  /*padding: 10px 20px;
-  min-height: 52px;
-  width: 100%; */
-}
-
-.button-item {
-  /* display: inline-block; */
-  /*margin-left: 12px; */
-}
-
-.result-code {
-  height: 100px;
 }
 </style>

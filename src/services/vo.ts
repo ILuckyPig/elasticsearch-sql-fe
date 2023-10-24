@@ -16,3 +16,8 @@ interface DslVO {
     status: number,
     body: JSON
 }
+
+interface TableVO {
+    columns: string[],
+    tableData: string[][]
+}

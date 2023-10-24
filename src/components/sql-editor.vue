@@ -53,5 +53,5 @@ export default {
 <style scoped>
 .editor-area {
   height: 300px;
-}
-</style>
+} 
+</style> -->
