@@ -1,17 +1,16 @@
 <template>
-    <el-table :header-cell-style="{ background: '#eff2f9' }" :data="tableData()" stripe border>
+    <el-table :header-cell-style="{ background: '#eff2f9' }"
+        :data="tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize)" stripe border>
         <el-table-column v-for="column in columns" :column-key="column.prop" :prop="column.prop" :label="column.label">
         </el-table-column>
     </el-table>
-    <div>
-        <el-pagination background layout="total, prev, pager, next, sizes" :page-size="pageSize" :current-page="page"
-            :page-sizes="[10, 20, 50, 100]" :total="total" @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"></el-pagination>
-    </div>
+    <el-pagination class="table-pagination" background layout="->, total, prev, pager, next, sizes" :page-size="pageSize" :current-page="currentPage"
+        :page-sizes="[10, 20, 50, 100]" :total="total" @current-change="handleCurrentChange"
+        @size-change="handleSizeChange" />
 </template>
 <script lang="ts">
 import { ElTable, ElTableColumn, ElPagination } from 'element-plus';
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, onUpdated, reactive, toRefs } from 'vue';
 // TODO page table
 
 export default defineComponent({
@@ -22,7 +21,7 @@ export default defineComponent({
         ElPagination
     },
     props: {
-        allTableData: {
+        tableData: {
             type: Array<Array<string>>,
             required: true
         },
@@ -33,25 +32,24 @@ export default defineComponent({
     },
     setup(props) {
         const state = reactive({
-            page: 1,
+            currentPage: 1,
             pageSize: 10,
-            total: props.allTableData.length
+            total: 0
         });
-        const tableData = (): Array<Array<string>> => {
-            return props
-                .allTableData
-                // .filter((_item, index) => index < state.page * state.pageSize && index >= state.pageSize * (state.page - 1));
-        };
+
+        onUpdated(() => {
+            state.total = props.tableData.length;
+        })
+
         //改变页码
         function handleCurrentChange(e: number) {
-            state.page = e;
+            state.currentPage = e;
         };
         //改变页数限制
         function handleSizeChange(e: number) {
             state.pageSize = e;
         };
         return {
-            tableData,
             handleCurrentChange,
             handleSizeChange,
             ...toRefs(state)
@@ -59,3 +57,8 @@ export default defineComponent({
     }
 })
 </script>
+<style scoped>
+.table-pagination {
+    margin-top: 6px;
+}
+</style>

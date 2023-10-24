@@ -14,7 +14,7 @@
     </div>
     <el-divider />
     <div v-show="showStatus == ResultShowStatus.SELECT">
-      <result-table :all-table-data="data" :columns="columns"></result-table>
+      <result-table :table-data="data" :columns="columns"></result-table>
     </div>
     <!-- <el-table v-show="showStatus == ResultShowStatus.SELECT" :header-cell-style="{background:'#eff2f9'}" :data="data" stripe border>
       <el-table-column v-for="column in columns" :column-key="column.prop" :prop="column.prop" :label="column.label">
