@@ -4,7 +4,7 @@
       <div class="sql-item-edit">
         <div class="workspace-left"></div>
         <div class="workspace-right">
-          <code-editor :model-value="code"></code-editor>
+          <code-editor ref="codeEditorRef"></code-editor>
         </div>
       </div>
       <div class="buttons">
@@ -33,14 +33,17 @@ import CodeEditor from './components/sql-editor.vue';
 import CodeView from "./components/code-view.vue";
 import ResultTable from './components/result-table.vue';
 
-const code = ref('');
+type CodeEditorType = InstanceType<typeof CodeEditor>;
+
+const codeEditorRef = ref<null | CodeEditorType>(null);
 const showStatus = ref(ResultShowStatus.HIDE);
 const explainResult = ref('');
 const columns = ref(Array<TableColumn>(0));
 const data = ref(Array<Array<string>>(0));
 
 function onExplain() {
-  const sqlVO: SqlVO = { url: 'http://localhost:9200/', sql: code.value };
+  const sqlVO = getSqlVO();
+  console.log(sqlVO);
   const response = explain('/explain', sqlVO);
   response
     .then(res => {
@@ -54,7 +57,8 @@ function onExplain() {
 }
 
 function onSelect() {
-  const sqlVO: SqlVO = { url: 'http://localhost:9200/', sql: code.value };
+  const sqlVO = getSqlVO();
+  console.log(sqlVO);
   const response = query('/query', sqlVO);
   response
     .then(res => {
@@ -76,6 +80,11 @@ function loseFocus(event: Event) {
     }
     (target as HTMLElement).blur();
   }
+}
+
+function getSqlVO(): SqlVO {
+  const codeValue = codeEditorRef.value?.code
+  return { url: 'http://localhost:9200/', sql: codeValue }
 }
 </script>
 

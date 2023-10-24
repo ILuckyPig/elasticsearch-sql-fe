@@ -2,7 +2,7 @@ interface SqlVO {
     url: string,
     username?: string,
     password?: string,
-    sql: string
+    sql: string | undefined
 }
 
 interface Result<T> {

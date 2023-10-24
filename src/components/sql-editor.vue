@@ -17,6 +17,7 @@ export default {
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const editor = ref();
+    const code = ref('');
     onMounted(() => {
       new EditorView({
         state: EditorState.create({
@@ -27,7 +28,9 @@ export default {
             sql(),
             EditorView.updateListener.of((view: ViewUpdate) => {
               if (view.docChanged) {
-                emit('update:modelValue', view.state.doc.toString())
+                const inCode = view.state.doc.toString()
+                emit('update:modelValue', inCode);
+                code.value = inCode;
               }
             }),
             EditorView.theme({
@@ -45,13 +48,9 @@ export default {
       });
     });
     return {
-      editor
+      editor,
+      code
     }
   }
 }
 </script>
-<style scoped>
-.editor-area {
-  height: 300px;
-} 
-</style> -->
