@@ -2,7 +2,9 @@
   <div class="sql-workspace">
     <div class="sql-region">
       <div class="sql-item-edit">
-        <div class="workspace-left"></div>
+        <div class="workspace-left">
+          <cluster-navigation />
+        </div>
         <div class="workspace-right">
           <code-editor ref="codeEditorRef"></code-editor>
         </div>
@@ -32,6 +34,7 @@ import { ResultShowStatus } from './services/result-show-status';
 import CodeEditor from './components/sql-editor.vue';
 import CodeView from "./components/code-view.vue";
 import ResultTable from './components/result-table.vue';
+import ClusterNavigation from './components/cluster-navigation.vue';
 
 type CodeEditorType = InstanceType<typeof CodeEditor>;
 
@@ -106,7 +109,7 @@ function getSqlVO(): SqlVO {
 
 .sql-item-edit {
   display: flex;
-  height: 62vh;
+  height: 55vh;
   font-size: 14px;
   font-family: Menlo-Regular, Monaco, Consolas, "Andale Mono", "Ubuntu Mono", monospace;
 }

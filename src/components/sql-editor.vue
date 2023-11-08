@@ -39,7 +39,7 @@ export default {
                 color: "var(--bl-editor-color)",
                 backgroundColor: "var(--bl-editor-bg-color)",
                 fontSize: '16px',
-                height: '62vh'
+                height: '55vh'
               }
             }, { dark: false })
           ]
